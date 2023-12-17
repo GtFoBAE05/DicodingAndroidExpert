@@ -1,0 +1,74 @@
+package com.example.androidexpert.ui.home
+
+import android.content.Intent
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.androidexpert.R
+import com.example.androidexpert.core.data.Resource
+import com.example.androidexpert.core.ui.MovieAdapter
+import com.example.androidexpert.databinding.FragmentHomeBinding
+import com.example.androidexpert.ui.detail.DetailActivity
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
+
+class HomeFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by viewModel()
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val movieAdapter = MovieAdapter()
+        movieAdapter.onItemClick = { selectedData ->
+            val intent = Intent(activity, DetailActivity::class.java)
+            intent.putExtra(DetailActivity.EXTRA_DATA, selectedData)
+            startActivity(intent)
+        }
+
+        homeViewModel.movieList.observe(viewLifecycleOwner) { movie ->
+            if (movie != null) {
+                when (movie) {
+                    is Resource.Loading -> binding.progressBar.visibility = View.VISIBLE
+                    is Resource.Success -> {
+                        binding.progressBar.visibility = View.GONE
+                        movieAdapter.setData(movie.data)
+                    }
+
+                    is Resource.Error -> {
+                        binding.progressBar.visibility = View.GONE
+                        Toast.makeText(binding.root.context, movie.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
+        with(binding.rvTourism) {
+            layoutManager = LinearLayoutManager(context)
+            setHasFixedSize(true)
+            adapter = movieAdapter
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+
+}
