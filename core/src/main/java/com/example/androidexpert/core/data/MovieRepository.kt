@@ -1,5 +1,6 @@
 package com.example.androidexpert.core.data
 
+import android.util.Log
 import com.example.androidexpert.core.data.source.local.LocalDataSource
 import com.example.androidexpert.core.data.source.remote.RemoteDataSource
 import com.example.androidexpert.core.data.source.remote.network.ApiResponse
@@ -21,13 +22,17 @@ class MovieRepository(
 ) : IMovieRepository {
     override fun getPopularMovie(): Flow<Resource<List<MovieItem>>> = flow {
         emit(Resource.Loading())
+        Log.e("TAG", "getPopularMovie: before result", )
         val result = remoteDataSource.getAllPopularMovies().first()
+
+        Log.e("TAG", "getPopularMovie: after result" + result, )
         when (result) {
             is ApiResponse.Success -> {
                 val movieItems = mapResponseToDomain(result.data)
                 emit(Resource.Success(movieItems))
             }
             is ApiResponse.Error -> {
+                Log.e("MovieRepository", "getPopularMovie: " + result.errorMessage, )
                 emit(Resource.Error(result.errorMessage))
             }
             is ApiResponse.Empty -> {

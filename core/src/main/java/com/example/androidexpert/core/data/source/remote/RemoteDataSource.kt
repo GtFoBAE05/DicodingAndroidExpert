@@ -17,6 +17,8 @@ class RemoteDataSource(private val apiService: ApiService) {
         return flow {
             val response = apiService.getPopularMovie()
             val dataArray = response.results
+            Log.e("TAG", "getAllPopularMovies: " + dataArray, )
+
             if (dataArray.isNotEmpty()) {
                 emit(ApiResponse.Success(response.results))
             } else {
