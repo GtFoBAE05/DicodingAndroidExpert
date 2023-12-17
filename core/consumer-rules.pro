@@ -4,7 +4,7 @@
 
 -keep class com.example.androidexpert.core.data.source.remote.response.ListPopularMovieResponse { <fields>; }
 -keep class com.example.androidexpert.core.data.source.remote.response.PopularMovieResult { <fields>; }
-
+-keep class kotlin.**
 
 ##---------------Begin: proguard configuration for Gson  ----------
 # Gson uses generic type information stored in a class file when working with fields. Proguard
