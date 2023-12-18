@@ -9,7 +9,6 @@ import com.bumptech.glide.Glide
 import com.example.androidexpert.core.R
 import com.example.androidexpert.core.databinding.ItemListMovieBinding
 import com.example.androidexpert.core.domain.model.MovieItem
-import com.example.androidexpert.core.utils.DiffUtilCallback
 import java.util.ArrayList
 
 class MovieAdapter() : RecyclerView.Adapter<MovieAdapter.ListViewHolder>()   {
